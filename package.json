@@ -1,0 +1,18 @@
+{
+  "name": "wireframe-explainer",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Agent skill that renders a green-wireframe editorial explainer video (near-black canvas, lime isometric diagrams, dot-matrix HUD, bold captions) on any topic.",
+  "keywords": ["agent-skill", "video", "motion-graphics", "explainer", "ffmpeg", "canvas", "kinetic-typography"],
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "bin": { "wireframe-explainer": "render.mjs" },
+  "scripts": {
+    "render": "node render.mjs examples/containers.film.json out/containers.mp4",
+    "stills": "node render.mjs examples/containers.film.json --stills --outdir stills"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.80"
+  }
+}

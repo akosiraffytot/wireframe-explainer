@@ -1,0 +1,389 @@
+{
+  "title": "The box that changed the world",
+  "size": [
+    720,
+    1280
+  ],
+  "fps": 30,
+  "chapters": [
+    {
+      "badge": "1956",
+      "label": "THE QUESTION",
+      "step": 1,
+      "of": 6
+    },
+    {
+      "badge": "1956",
+      "label": "STEP 2 · THE BOX",
+      "step": 2,
+      "of": 6
+    },
+    {
+      "badge": "1966",
+      "label": "STEP 3 · THE PORT",
+      "step": 3,
+      "of": 6
+    },
+    {
+      "badge": "1973",
+      "label": "STEP 4 · THE PRICE",
+      "step": 4,
+      "of": 6
+    },
+    {
+      "badge": "2000",
+      "label": "STEP 5 · THE TURN",
+      "step": 5,
+      "of": 6
+    },
+    {
+      "badge": "2024",
+      "label": "THE ANSWER",
+      "step": 6,
+      "of": 6
+    }
+  ],
+  "shots": [
+    {
+      "ch": 0,
+      "tpl": "compare",
+      "dur": 3.2,
+      "props": {
+        "labels": [
+          "LOOSE CARGO",
+          "THE BOX"
+        ],
+        "meters": [
+          0.14,
+          0.95
+        ],
+        "slash": false,
+        "sizeA": 200,
+        "sizeB": 190
+      },
+      "lines": [
+        "ONE SHIP",
+        "TOOK SIX DAYS"
+      ]
+    },
+    {
+      "ch": 0,
+      "tpl": "people",
+      "dur": 2.6,
+      "props": {
+        "queue": true,
+        "y": 760,
+        "h": 130
+      },
+      "lines": [
+        "EVERY CRATE",
+        "MOVED BY HAND"
+      ]
+    },
+    {
+      "ch": 0,
+      "tpl": "chart",
+      "dur": 2.8,
+      "props": {
+        "bars": [
+          {
+            "v": 0.95,
+            "color": "red",
+            "label": "1955"
+          },
+          {
+            "v": 0.22,
+            "color": "lime",
+            "label": "1970"
+          }
+        ]
+      },
+      "lines": [
+        "LOADING COST",
+        "OF ONE SHIP"
+      ]
+    },
+    {
+      "ch": 1,
+      "tpl": "card",
+      "dur": 1.8,
+      "props": {
+        "big": "1956",
+        "bigSize": 74,
+        "frame": true
+      },
+      "lines": [
+        "APRIL 26"
+      ]
+    },
+    {
+      "ch": 1,
+      "tpl": "rack",
+      "dur": 3.0,
+      "annot": {
+        "text": "THE CONTAINER · 1956"
+      },
+      "props": {
+        "cols": 3,
+        "rows": 5,
+        "cell": 62,
+        "glowStrip": true,
+        "cy": 640
+      },
+      "lines": [
+        "A STEEL BOX",
+        "33 FEET LONG"
+      ]
+    },
+    {
+      "ch": 1,
+      "tpl": "dots",
+      "dur": 2.4,
+      "props": {
+        "lit": [
+          12,
+          26
+        ],
+        "cols": 10,
+        "rows": 6,
+        "cell": 62
+      },
+      "lines": [
+        "TWO IDEAS",
+        "MET"
+      ]
+    },
+    {
+      "ch": 1,
+      "tpl": "monitor",
+      "dur": 3.0,
+      "props": {
+        "screen": "Malcolm McLean\n> trucker",
+        "cy": 560
+      },
+      "lines": [
+        "A TRUCKER",
+        "FROM CAROLINA"
+      ]
+    },
+    {
+      "ch": 1,
+      "tpl": "road",
+      "dur": 3.2,
+      "props": {
+        "tags": [
+          {
+            "text": "NEWARK",
+            "at": 0.32,
+            "side": -1,
+            "dy": -40,
+            "size": 30
+          },
+          {
+            "text": "HOUSTON",
+            "at": 0.62,
+            "side": 1,
+            "dy": -30,
+            "size": 30
+          }
+        ],
+        "figureH": 72
+      },
+      "lines": [
+        "HE BOUGHT",
+        "A SHIP"
+      ]
+    },
+    {
+      "ch": 2,
+      "tpl": "rack",
+      "dur": 2.8,
+      "annot": "PORT NEWARK · 1966",
+      "props": {
+        "cols": 4,
+        "rows": 6,
+        "cell": 54,
+        "cy": 620
+      },
+      "lines": [
+        "58 BOXES",
+        "PER SHIP"
+      ]
+    },
+    {
+      "ch": 2,
+      "tpl": "lattice",
+      "dur": 3.0,
+      "props": {
+        "n": 4,
+        "step": 110,
+        "chipSize": 44
+      },
+      "lines": [
+        "EVERY PORT",
+        "REBUILT"
+      ]
+    },
+    {
+      "ch": 2,
+      "tpl": "icons",
+      "dur": 2.8,
+      "props": {
+        "items": [
+          {
+            "kind": "box",
+            "state": "no"
+          },
+          {
+            "kind": "dot",
+            "state": "no"
+          },
+          {
+            "kind": "box",
+            "state": "no"
+          },
+          {
+            "kind": "gpu",
+            "state": "yes"
+          }
+        ]
+      },
+      "lines": [
+        "THE UNIONS",
+        "FOUGHT IT"
+      ]
+    },
+    {
+      "ch": 3,
+      "tpl": "chart",
+      "dur": 3.0,
+      "props": {
+        "type": "line",
+        "points": [
+          1,
+          0.92,
+          0.8,
+          0.62,
+          0.44,
+          0.3,
+          0.2,
+          0.14
+        ],
+        "tag": true
+      },
+      "lines": [
+        "FREIGHT FELL",
+        "BY 90%"
+      ]
+    },
+    {
+      "ch": 3,
+      "tpl": "grid",
+      "dur": 2.6,
+      "props": {
+        "cols": 13,
+        "rows": 8,
+        "lit": [
+          3,
+          4,
+          5,
+          21,
+          22,
+          40,
+          41,
+          58,
+          60,
+          77,
+          79,
+          95
+        ],
+        "counter": {
+          "from": 0,
+          "to": 90
+        }
+      },
+      "lines": [
+        "NINETY PERCENT",
+        "OF WORLD TRADE"
+      ]
+    },
+    {
+      "ch": 4,
+      "tpl": "people",
+      "dur": 3.0,
+      "props": {
+        "handoff": true,
+        "y": 760,
+        "h": 130
+      },
+      "lines": [
+        "THE PORT",
+        "MOVED INLAND"
+      ]
+    },
+    {
+      "ch": 4,
+      "tpl": "stack",
+      "dur": 3.0,
+      "props": {
+        "layers": 6,
+        "size": 210,
+        "gap": 32,
+        "callouts": [
+          {
+            "text": "CITY",
+            "dx": 160
+          },
+          {
+            "text": "WAREHOUSE",
+            "dx": 160
+          }
+        ],
+        "cy": 660
+      },
+      "lines": [
+        "EVERY CITY",
+        "WANTED ONE"
+      ]
+    },
+    {
+      "ch": 5,
+      "tpl": "textwall",
+      "dur": 3.0,
+      "props": {
+        "words": [
+          "PIER",
+          "BERTH",
+          "LINER",
+          "FREIGHT",
+          "BERTH",
+          "TEU",
+          "SHIP",
+          "PORT"
+        ],
+        "big": {
+          "from": 0,
+          "to": 90
+        }
+      },
+      "lines": [
+        "90% OF GOODS",
+        "GO BY SEA"
+      ]
+    },
+    {
+      "ch": 5,
+      "tpl": "card",
+      "dur": 3.6,
+      "fade": true,
+      "props": {
+        "big": "THE BOX",
+        "bigSize": 54
+      },
+      "lines": [
+        "BENEATH",
+        "EVERYTHING"
+      ]
+    }
+  ]
+}
