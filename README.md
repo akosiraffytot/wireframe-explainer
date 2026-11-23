@@ -101,7 +101,7 @@ timing, palette, type sizes), is in [`reference.md`](reference.md).
 ## Notes and limits
 
 - The style was reverse-engineered with [rea-video](https://github.com/JuneYaooo/rea-video) from a 178 s reference breakdown: 65 shots, 2.74 s mean shot length, 1.2 s median caption line, 100% code-rendered.
-- Content quality is on the agent: it writes the six-chapter storyboard and must look at the `--stills` before rendering. The style is guaranteed; the script is not.
+- **The demo is a shape, never a script.** The agent must write a `storyboard.md` from your brief before touching JSON, and `check.mjs` fails any film whose shots or captions are lifted from `examples/containers.film.json`. Content quality is still on the agent: the style is guaranteed, the script is not.
 - Diagrams are template-bound. A topic that needs a genuinely new visual means editing `lib/scenes.mjs`.
 - Dot-matrix text is uppercase Latin + digits only. Captions take accents; CJK does not.
 

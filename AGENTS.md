@@ -27,14 +27,20 @@ Read `SKILL.md` and follow it. The short version:
    one idea per shot.
 2. Express it as `film.json` (schema in `SKILL.md`, worked example in
    `examples/containers.film.json`).
-3. `node render.mjs film.json --stills --outdir stills` and **look at the stills**.
-4. `node render.mjs film.json out/film.mp4` and check it with `ffprobe`.
+3. `node check.mjs film.json` — prints the storyboard, refuses a demo copy.
+4. `node render.mjs film.json --stills --outdir stills` and **look at the stills**.
+5. `node render.mjs film.json out/film.mp4` and check it with `ffprobe`.
 
 `reference.md` carries the measured style spec (shot length, caption timing,
 palette, template catalog). Do not invent your own metrics: use those.
 
 ## Rules that matter
 
+- **The demo is a shape, never a script.** `examples/containers.film.json` is a
+  1956 shipping-container film: copy its structure, never its captions. Do not
+  answer a video request by rendering it. Write `storyboard.md` from the user's
+  brief first, then `film.json`, then `node check.mjs film.json` (it fails a
+  film that is still the demo).
 - Captions are 2-4 words per line, uppercase, white with one lime keyword.
 - Mean shot length 2.7 s; hard cuts only; the caption advances *inside* the shot.
 - One accent colour (lime). Red only for failure or loss.
@@ -46,6 +52,7 @@ palette, template catalog). Do not invent your own metrics: use those.
 SKILL.md        the skill (frontmatter + workflow)
 reference.md    measurements + template catalog
 render.mjs      film.json -> mp4, or --stills for QA
+check.mjs       validates a film.json + prints the storyboard; blocks demo copies
 lib/            dot-matrix type, iso primitives, 16 scene templates, canvas loader
 examples/       a 17-shot worked example
 scripts/        install.sh
