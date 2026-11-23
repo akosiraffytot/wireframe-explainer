@@ -6,7 +6,7 @@
 
 ```bash
 # in any project, with an agent that can run commands:
-Install https://github.com/<owner>/wireframe-explainer, then make a 60s video about <topic>
+Install https://github.com/akosiraffytot/wireframe-explainer, then make a 60s video about <topic>
 ```
 
 ---
@@ -27,7 +27,7 @@ made from [`examples/containers.film.json`](examples/containers.film.json).
 ## Install
 
 ```bash
-git clone https://github.com/<owner>/wireframe-explainer /tmp/wireframe-explainer
+git clone https://github.com/akosiraffytot/wireframe-explainer /tmp/wireframe-explainer
 bash /tmp/wireframe-explainer/scripts/install.sh .     # -> ./.agents/skills/wireframe-explainer
 ```
 

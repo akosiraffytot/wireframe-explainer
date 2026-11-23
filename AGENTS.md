@@ -8,7 +8,7 @@ footage, no API keys. Node + ffmpeg only.
 ## Install into the current project (one command)
 
 ```bash
-git clone https://github.com/<owner>/wireframe-explainer /tmp/wireframe-explainer
+git clone https://github.com/akosiraffytot/wireframe-explainer /tmp/wireframe-explainer
 bash /tmp/wireframe-explainer/scripts/install.sh .
 ```
 
