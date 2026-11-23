@@ -28,11 +28,13 @@ Read `SKILL.md` and follow it. The short version:
    (`examples/storyboard.template.md`), transcribe it to `film.json`, then render
    `node render.mjs film.json --sheet --outdir stills` and **show the user
    `stills/storyboard.png` and stop for approval**.
-2. **Phase B — build.** `node check.mjs film.json` (refuses demo copies and bad
-   scenes) → `--stills` and look at them → `node render.mjs film.json out/film.mp4`,
+2. **Phase B — build.** `node verify.mjs film.json` (refuses demo copies, bad
+   scenes, text that cannot fit, missing sprites) → look at the sheet and frames
+   it writes and tick its six boxes → `node render.mjs film.json out/film.mp4`,
    or `node build.mjs out/film.mp4 ...` for a long film.
 3. No template fits? `tpl: "compose"` + primitives (list in `reference.md`), not a
-   wrong template.
+   wrong template. No primitive for the object (dog, machine, dragon)? Draw it in
+   `sprites.json` and prove it with `node sprite.mjs check` + `proof`, then look.
 
 `reference.md` carries the measured style spec (shot length, caption timing,
 palette, template catalog). Do not invent your own metrics: use those.
@@ -57,6 +59,8 @@ reference.md    measurements + template catalog
 render.mjs      film.json -> mp4, or --stills for QA
 check.mjs       validates a film.json + prints the storyboard; blocks demo copies
 build.mjs       renders a long film in parts and concatenates
+sprite.mjs      author/proof/check hand-drawn sprites (characters, objects)
+verify.mjs      check + storyboard sheet + full-size frames, with the review checklist
 lib/            dot-matrix type, iso primitives, 16 scene templates, canvas loader
 examples/       a 17-shot worked example
 scripts/        install.sh

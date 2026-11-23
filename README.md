@@ -44,7 +44,9 @@ Manual install: copy `SKILL.md`, `reference.md`, `render.mjs`, `lib/`, `examples
 cd .agents/skills/wireframe-explainer
 node render.mjs examples/containers.film.json out/containers.mp4   # render the demo
 node render.mjs my.film.json --stills --outdir stills              # QA stills, one per shot
+node verify.mjs my.film.json                                      # validate + sheet + stills + checklist
 node render.mjs my.film.json --sheet --outdir stills               # approval sheet: one frame per shot
+node sprite.mjs proof sprites.json                                # see the characters you drew
 node render.mjs my.film.json out/film.mp4 --music bed.mp3          # with a music bed
 node build.mjs out/film.mp4 act1.json act2.json --parts 8          # long film, parts + concat
 ```
@@ -96,7 +98,7 @@ node render.mjs my.film.json --sheet --outdir stills    # -> stills/storyboard.p
 | `monitor` CRT with typed screen text | `textwall` wall of dot-matrix words + big number |
 | `people` stick figures: queue, crowd, hand-off | `dots` sparse field, a few lit (headcount, survivors) |
 | `card` a beat with a big dot-matrix word | + shot-level `annot`, `big`, `fade`, `enter` |
-| `compose` any of 20 primitives (`chip`, `arrow`, `badge`, `bars`, `callout`, `counter`, `lattice`, …) in any arrangement | for shots no fixed template covers |
+| `compose` any of 21 primitives (`chip`, `arrow`, `badge`, `bars`, `callout`, `counter`, `lattice`, `sprite`, …) in any arrangement | for shots no fixed template covers |
 
 The catalog with every prop, plus the measured style spec (shot length, caption
 timing, palette, type sizes), is in [`reference.md`](reference.md).

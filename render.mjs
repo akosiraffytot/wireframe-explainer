@@ -7,10 +7,12 @@
 //
 // Every shot is one template + a HUD chapter + 2-5 caption lines.
 
-import { createCanvas } from "./lib/load-canvas.mjs";
+import { createCanvas, Path2D } from "./lib/load-canvas.mjs";
+import { setPath2D } from "./lib/primitives.mjs";
+import { loadSprites } from "./lib/sprites.mjs";
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname, resolve, join } from "node:path";
 import { PAL, background, isoGrid } from "./lib/draw.mjs";
 import { hud, annot, captions, templates, setSize } from "./lib/scenes.mjs";
 import { dotText, measure } from "./lib/dotfont.mjs";
@@ -35,6 +37,12 @@ const W = film.size?.[0] ?? 720;
 const H = film.size?.[1] ?? 1280;
 const FPS = film.fps ?? 30;
 setSize(W, H);
+setPath2D(Path2D);
+
+// project sprites: characters/objects authored for this script (see sprite.mjs)
+const spriteDirs = [dirname(resolve(filmPath)), process.cwd()];
+const addedSprites = loadSprites([...new Set(spriteDirs.map((d) => join(d, "sprites.json")))]);
+if (addedSprites.length) console.log(`sprites: ${addedSprites.join(", ")}`);
 
 const total = film.shots.reduce((a, s) => a + (s.dur ?? 3), 0);
 console.log(`film: ${film.shots.length} shots, ${total.toFixed(1)}s @ ${FPS}fps ${W}x${H}`);

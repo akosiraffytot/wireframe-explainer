@@ -60,6 +60,10 @@ plan and let the user correct them there.
 2. **Shots.** One template or one compose scene per shot. Pick from the catalog
    in `reference.md`; if nothing fits, build the shot from primitives with
    `tpl: "compose"` (see below). Never force an idea into the wrong template.
+   If the script needs something that is neither a primitive nor a built-in
+   sprite — a dog, a washing machine, a dragon — **draw it yourself** and prove it
+   reads (next section). Do this before the sheet, because the sheet is what the
+   user judges.
 3. **`storyboard.md`** — start from `examples/storyboard.template.md`. A table,
    one row per shot: `# | chapter | template | caption lines | dur | the idea`.
 4. **`film.json`** — a mechanical transcription of that table. No new content.
@@ -73,11 +77,13 @@ Skip the wait only if the user said "just make it", "no need to check" or simila
 
 ### Phase B — build (after approval)
 
-7. `node check.mjs film.json` — prints the storyboard back and fails on a bad
-   template, an absurd duration, or a film that is still the demo whose captions
-   are lifted from `examples/containers.film.json`. Fix what it flags.
-8. `node render.mjs film.json --stills --outdir stills` — full-size frames at a
-   few timestamps. Look at them: overlaps, clipping, dead frames, long captions.
+7. `node verify.mjs film.json` — validates the plan, then writes the labelled
+   sheet and three full-size frames. It **stops** if `check.mjs` finds anything
+   (bad template, duration, demo copy, caption that cannot fit, sprite that does
+   not exist). This is the self-review command; use it, do not hand-roll it.
+8. **Look at every image it wrote** and tick the six boxes it prints. Then fix
+   whatever you cannot tick, and run it again. Repeat until all six are ticked.
+   A frame you have not looked at is a frame you do not know.
 9. Render:
    - one part: `node render.mjs film.json out/film.mp4 [--music bed.mp3]`
    - long film: `node build.mjs out/film.mp4 act1.json act2.json ...` or
@@ -117,6 +123,71 @@ seconds); `reveal` is how long it takes (default 0.45). Full prop list in
 Composing is how a 2-hour film stays in one style without 2500 hand-built
 templates: most shots reuse a template, the ones that do not get composed from
 the same primitives.
+
+## Characters and objects the primitives do not have
+
+A dog, a washing machine, a dragon: nothing in the catalog draws them, and no
+template is close. Do not approximate with the wrong diagram and do not skip the
+shot. **Draw the thing**, in the same language as everything else: line art on a
+100x100 grid, stroke only, feet or base near y=88.
+
+Author it in `sprites.json` next to the film (project assets, reusable by later
+shots):
+
+```json
+{
+  "dog": {
+    "lines": [
+      [[26,50],[70,48],[73,56],[73,64],[30,66],[26,58],[26,50]],
+      [[70,48],[77,44],[84,38],[92,40],[98,44],[93,48],[84,48],[78,50]],
+      [[82,37],[86,28],[91,36]],
+      [[34,66],[32,86],[25,87]],
+      [[68,64],[70,86],[77,87]],
+      [[27,51],[19,45],[14,36],[16,29]]
+    ],
+    "circles": [[89,42,1.5]]
+  }
+}
+```
+
+Then use it like any other prop: `{ "prim": "sprite", "asset": "dog", "at": [360,560], "box": 300 }`.
+Built-ins ship for `dog`, `washer`, `dragon`; `lines`, `circles` or a raw SVG
+`d` path also work inline, without a file.
+
+**The loop that stops it being a look-alike:**
+
+```bash
+node sprite.mjs check sprites.json    # geometry + duplicate check, exit 1 on a flop
+node sprite.mjs proof sprites.json    # contact sheet: each sprite, its name, its size
+```
+
+`check` fails a sprite that is blank, a flat dash, off the grid, one stroke long,
+or more than 86 % identical to an existing one (a copied body with a new name).
+`proof` is the part only you can do: **open the sheet and ask, for each one —**
+
+1. Is this that thing, with the label covered up? (a dog, not "a creature")
+2. Does it carry the one or two details that make it recognisable — ears, drum
+   door, wing?
+3. Is its silhouette different from the other sprites in this film?
+
+Cannot answer yes: change coordinates and run the two commands again. Budget
+three rounds; if it still will not read at `box: 200`+, simplify the idea (a
+badge or a symbol shot instead of a drawing) rather than ship a blob. When it
+passes in isolation, check it again in the sheet at real size — that is the last
+word.
+
+## Text that does not fit
+
+Captions shrink themselves to stay inside the frame, but shrinking is a rescue,
+not a plan: a 30-character caption at 32px is unreadable. `check.mjs` measures
+every caption, annotation, chapter label and in-scene label against the frame and
+reports the pixel overflow, so fix the words:
+
+- captions: 2-4 words, ≤15 characters; two short lines beat one long one
+- a caption that needs shrinking for a whole shot is a caption to rewrite
+- in-scene `label`/`badge`/`text`: keep `at` inside 60..660 and count the width
+  the check reports; move the element left rather than shortening meaning away
+- `annot` and chapter labels live in fixed HUD rows — long text will collide
 
 ## How big can it get
 
@@ -193,4 +264,8 @@ paints those words lime; `{"text": "...", "color": "lime"}` paints the whole lin
 - Do not jump to Phase B without a `storyboard.md` and a `--sheet` image. The
   user approves pictures, not JSON.
 - Do not use a template that misrepresents the idea just because it exists —
-  compose the shot instead.
+  compose the shot instead, or draw the object as a sprite.
+- Do not render video with an unticked verify box. If text clips, the words are
+  wrong, not the font size.
+- Do not ship a sprite you have not seen in the proof sheet and again in the
+  storyboard sheet at real size.

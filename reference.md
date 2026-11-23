@@ -81,6 +81,42 @@ order. Element props: `at:[x,y]` (anchor in px), `t0` (local seconds it appears)
 | `panel` | framed rectangle / screen | `w, h, fill` |
 | `lattice` | iso lattice of chips with links | `n, step, chip, links` |
 | `cross` / `check` | red X / lime tick | `size` |
+| `sprite` | hand-drawn character or object | `asset` \| `lines` \| `circles` \| `d`, `box, lw, glow, motion:"bob"\|"drift"\|"pulse", flip, fill` |
+
+### Sprites: drawing what the catalog does not have
+
+Grid is 100x100, stroke-only, feet/base near y=88 so everything shares one ground
+line. `box` is how many px the 100-grid covers (`box: 300` → a 300px character).
+Built-ins: `dog`, `washer`, `dragon`. Anything else goes in `sprites.json` beside
+the film:
+
+```json
+{ "rocket": { "lines": [
+  [[50,6],[63,32],[60,70],[40,70],[37,32],[50,6]],
+  [[40,70],[50,84],[60,70]],
+  [[37,55],[27,65]],
+  [[63,55],[73,65]]
+], "circles": [[50,46,9]] } }
+```
+
+| want | do |
+|---|---|
+| a shape you can describe as points | `lines`: array of polylines, `[x,y]` in the 0-100 grid |
+| something round (drum, eye, wheel) | `circles`: `[cx, cy, r]` |
+| an existing SVG outline | `d`: raw path data, same grid |
+| it must feel alive while on screen | `motion: "bob"` (vertical), `"drift"` (sideways), `"pulse"` (scale) |
+
+`node sprite.mjs check sprites.json` fails blank/dash/off-grid/one-stroke/duplicate
+sprites; `node sprite.mjs proof sprites.json` writes a labelled contact sheet that
+must be looked at. A sprite above 86 % IoU with another is treated as a look-alike
+and refused.
+
+### Text limits
+
+Captions auto-shrink to 90 % of frame width but are meant to stay at 62px:
+2-4 words, ≤15 characters, max 18. `check.mjs` reports the real pixel width of
+every caption, annot, chapter label and in-scene label, so overflow is a number
+before it is a rendering surprise. Safe horizontal band for in-scene text: 60-660.
 
 Shot-level extras: `annot` (dot-matrix line, top centre), `big` ({text,y,size}),
 `gridCell`, `gridAlpha`, `gridY`, `grid:false` to drop the ground grid,
