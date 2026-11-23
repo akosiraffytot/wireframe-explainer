@@ -12,6 +12,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { templates } from "./lib/scenes.mjs";
+import { PRIM_NAMES } from "./lib/primitives.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEMO = join(HERE, "examples", "containers.film.json");
@@ -45,6 +46,19 @@ shots.forEach((s, i) => {
   total += dur;
   const tpl = s.tpl ?? "card";
   if (!tplNames.includes(tpl)) errors.push(`shot ${n}: unknown template "${tpl}"`);
+  let tplLabel = tpl;
+  if (tpl === "compose") {
+    const els = s.props?.elements ?? [];
+    tplLabel = `compose[${els.length}]`;
+    if (!els.length) errors.push(`shot ${n}: compose scene has no props.elements`);
+    els.forEach((el, k) => {
+      if (!PRIM_NAMES.includes(el.prim)) {
+        errors.push(`shot ${n}: element ${k + 1} uses unknown primitive "${el.prim}" (have: ${PRIM_NAMES.join(", ")})`);
+      }
+      if (!el.at && !el.from && !el.to) warnings.push(`shot ${n}: element ${k + 1} (${el.prim}) has no at/from/to - it may draw off-frame`);
+    });
+    if (els.length > 14) warnings.push(`shot ${n}: ${els.length} elements is busy for one idea`);
+  }
   if (!(dur > 0)) errors.push(`shot ${n}: dur missing`);
   else if (dur < 0.5 || dur > 8) errors.push(`shot ${n}: dur ${dur}s is outside 0.5-8s`);
   else if (dur < 1.2 || dur > 5) warnings.push(`shot ${n}: dur ${dur}s is unusual (1.2-5s is the reference range)`);
@@ -59,7 +73,7 @@ shots.forEach((s, i) => {
   if (film.chapters && s.ch != null && (s.ch < 0 || s.ch >= film.chapters.length)) {
     errors.push(`shot ${n}: ch ${s.ch} has no chapter`);
   }
-  rows.push({ n, t: total.toFixed(1), ch: s.ch ?? "-", tpl, lines: lines.join(" / "), dur: dur.toFixed(1) });
+  rows.push({ n, t: total.toFixed(1), ch: s.ch ?? "-", tpl: tplLabel, lines: lines.join(" / "), dur: dur.toFixed(1) });
 });
 
 // ---- is this still the demo?
@@ -112,7 +126,7 @@ console.log(`${shots.length} shots | ${total.toFixed(1)}s | ${((shots.length / M
 const w = (s, n) => String(s).padEnd(n);
 console.log(w("#", 3) + w("at", 7) + w("ch", 4) + w("template", 11) + w("dur", 6) + "captions");
 console.log("-".repeat(78));
-rows.forEach((r) => console.log(w(r.n, 3) + w(r.t, 7) + w(r.ch, 4) + w(r.tpl, 11) + w(r.dur, 6) + r.lines));
+rows.forEach((r) => console.log(w(r.n, 3) + w(r.t, 7) + w(r.ch, 4) + w(r.tpl, 13) + w(r.dur, 6) + r.lines));
 console.log("");
 
 if (warnings.length) {

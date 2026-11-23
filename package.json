@@ -1,6 +1,6 @@
 {
   "name": "wireframe-explainer",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": false,
   "type": "module",
   "description": "Agent skill that renders a green-wireframe editorial explainer video (near-black canvas, lime isometric diagrams, dot-matrix HUD, bold captions) on any topic.",
@@ -23,6 +23,7 @@
   "scripts": {
     "render": "node render.mjs examples/containers.film.json out/containers.mp4",
     "stills": "node render.mjs examples/containers.film.json --stills --outdir stills",
+    "sheet": "node render.mjs examples/containers.film.json --sheet --outdir stills",
     "check": "node check.mjs examples/containers.film.json --allow-demo"
   },
   "dependencies": {

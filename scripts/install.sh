@@ -30,7 +30,7 @@ if [ "$SRC" = "$DEST" ]; then
   say "already installed at $DEST"
 else
   mkdir -p "$DEST"
-  for f in SKILL.md reference.md render.mjs check.mjs package.json lib examples scripts; do
+  for f in SKILL.md reference.md render.mjs check.mjs build.mjs package.json lib examples scripts; do
     [ -e "$SRC/$f" ] && cp -R "$SRC/$f" "$DEST/"
   done
   say "installed -> $DEST"

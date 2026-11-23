@@ -44,7 +44,9 @@ Manual install: copy `SKILL.md`, `reference.md`, `render.mjs`, `lib/`, `examples
 cd .agents/skills/wireframe-explainer
 node render.mjs examples/containers.film.json out/containers.mp4   # render the demo
 node render.mjs my.film.json --stills --outdir stills              # QA stills, one per shot
+node render.mjs my.film.json --sheet --outdir stills               # approval sheet: one frame per shot
 node render.mjs my.film.json out/film.mp4 --music bed.mp3          # with a music bed
+node build.mjs out/film.mp4 act1.json act2.json --parts 8          # long film, parts + concat
 ```
 
 Rendering runs at ~24 frames per second, so a 3-minute film takes about 4 minutes.
@@ -70,6 +72,18 @@ Rendering runs at ~24 frames per second, so a 3-minute film takes about 4 minute
 Captions take keywords: `{"text": "SO HE CHOSE SPEED", "hi": ["SPEED"]}` paints
 `SPEED` lime. `\n` makes a two-row block. Full schema in [`SKILL.md`](SKILL.md).
 
+## The review gate
+
+The agent plans first and renders second. Phase A ends with a table in
+`storyboard.md` **and** a labelled contact sheet — one frame per shot — that you
+approve before any video is encoded:
+
+<p align="center"><img src="media/storyboard.jpg" width="620" alt="storyboard contact sheet: one labelled frame per shot"></p>
+
+```bash
+node render.mjs my.film.json --sheet --outdir stills    # -> stills/storyboard.png
+```
+
 ## Templates
 
 | | |
@@ -82,6 +96,7 @@ Captions take keywords: `{"text": "SO HE CHOSE SPEED", "hi": ["SPEED"]}` paints
 | `monitor` CRT with typed screen text | `textwall` wall of dot-matrix words + big number |
 | `people` stick figures: queue, crowd, hand-off | `dots` sparse field, a few lit (headcount, survivors) |
 | `card` a beat with a big dot-matrix word | + shot-level `annot`, `big`, `fade`, `enter` |
+| `compose` any of 20 primitives (`chip`, `arrow`, `badge`, `bars`, `callout`, `counter`, `lattice`, …) in any arrangement | for shots no fixed template covers |
 
 The catalog with every prop, plus the measured style spec (shot length, caption
 timing, palette, type sizes), is in [`reference.md`](reference.md).
@@ -90,7 +105,8 @@ timing, palette, type sizes), is in [`reference.md`](reference.md).
 
 - `lib/dotfont.mjs` — a 5×7 dot-matrix type engine (no font files, uppercase Latin).
 - `lib/draw.mjs` — palette, isometric grid, glowing wireframe chip / stack / rack / road / rings, stick figure.
-- `lib/scenes.mjs` — the 16 templates, the HUD, and the caption engine (line timing, keyword colouring, entrance).
+- `lib/scenes.mjs` — the 15 fixed templates + `compose`, the HUD, and the caption engine (line timing, keyword colouring, entrance).
+- `lib/primitives.mjs` — the 20 scene primitives a composed shot is built from.
 - `render.mjs` — walks `film.json`, draws each frame with Skia, pipes raw frames to `ffmpeg`.
 - `lib/load-canvas.mjs` — finds `@napi-rs/canvas` wherever it is and installs it once if it is nowhere.
 

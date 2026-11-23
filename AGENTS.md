@@ -23,13 +23,16 @@ yourself — nothing else is required.
 
 Read `SKILL.md` and follow it. The short version:
 
-1. Write a six-chapter story (hook → context → mechanism → cost → turn → answer),
-   one idea per shot.
-2. Express it as `film.json` (schema in `SKILL.md`, worked example in
-   `examples/containers.film.json`).
-3. `node check.mjs film.json` — prints the storyboard, refuses a demo copy.
-4. `node render.mjs film.json --stills --outdir stills` and **look at the stills**.
-5. `node render.mjs film.json out/film.mp4` and check it with `ffprobe`.
+1. **Phase A — plan.** Write a six-chapter story (hook → context → mechanism →
+   cost → turn → answer), one idea per shot. Put it in `storyboard.md`
+   (`examples/storyboard.template.md`), transcribe it to `film.json`, then render
+   `node render.mjs film.json --sheet --outdir stills` and **show the user
+   `stills/storyboard.png` and stop for approval**.
+2. **Phase B — build.** `node check.mjs film.json` (refuses demo copies and bad
+   scenes) → `--stills` and look at them → `node render.mjs film.json out/film.mp4`,
+   or `node build.mjs out/film.mp4 ...` for a long film.
+3. No template fits? `tpl: "compose"` + primitives (list in `reference.md`), not a
+   wrong template.
 
 `reference.md` carries the measured style spec (shot length, caption timing,
 palette, template catalog). Do not invent your own metrics: use those.
@@ -53,6 +56,7 @@ SKILL.md        the skill (frontmatter + workflow)
 reference.md    measurements + template catalog
 render.mjs      film.json -> mp4, or --stills for QA
 check.mjs       validates a film.json + prints the storyboard; blocks demo copies
+build.mjs       renders a long film in parts and concatenates
 lib/            dot-matrix type, iso primitives, 16 scene templates, canvas loader
 examples/       a 17-shot worked example
 scripts/        install.sh

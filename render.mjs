@@ -88,6 +88,43 @@ function drawFrame(ctx, t) {
   return { shot, idx, local };
 }
 
+// ---- storyboard sheet mode (one frame per shot, labelled, for approval)
+if (flags.sheet) {
+  const dir = flags.outdir ?? ".";
+  mkdirSync(dir, { recursive: true });
+  const cols = 4;
+  const cw = 360, ch = 640, gap = 6, head = 38;
+  const rows = Math.ceil(film.shots.length / cols);
+  const sheet = createCanvas(cols * (cw + gap) + gap, rows * (ch + head + gap) + gap);
+  const sctx = sheet.getContext("2d");
+  sctx.fillStyle = "#000";
+  sctx.fillRect(0, 0, sheet.width, sheet.height);
+  const canvas = createCanvas(W, H);
+  const ctx = canvas.getContext("2d");
+  let acc = 0;
+  film.shots.forEach((sh, i) => {
+    const t = acc + (sh.dur ?? 3) * 0.78;
+    drawFrame(ctx, t);
+    const cx = gap + (i % cols) * (cw + gap);
+    const cy = gap + Math.floor(i / cols) * (ch + head + gap);
+    sctx.drawImage(canvas, cx, cy + head, cw, ch);
+    sctx.fillStyle = "#0b1409";
+    sctx.fillRect(cx, cy, cw, head);
+    sctx.fillStyle = "#9FDD4E";
+    sctx.font = "bold 14px Consolas, monospace";
+    const cap = (sh.lines ?? []).map((l) => (typeof l === "string" ? l : l.text)).join(" / ");
+    sctx.fillText(`#${i + 1} · ${(sh.dur ?? 3).toFixed(1)}s · ${sh.tpl ?? "card"}`, cx + 6, cy + 15);
+    sctx.fillStyle = "rgba(237,239,234,0.7)";
+    sctx.font = "11px Consolas, monospace";
+    sctx.fillText(cap.slice(0, 58), cx + 6, cy + 30);
+    acc += sh.dur ?? 3;
+  });
+  const outPath = `${dir}/${flags.name ?? "storyboard"}.png`;
+  writeFileSync(outPath, sheet.toBuffer("image/png"));
+  console.log(`wrote ${outPath}  (${film.shots.length} shots, ${cols} per row)`);
+  process.exit(0);
+}
+
 // ---- stills mode (QA: look at one frame per shot)
 if (flags.stills) {
   const times = flags.stills === true

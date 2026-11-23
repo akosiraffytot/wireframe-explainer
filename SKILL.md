@@ -45,40 +45,93 @@ first run, so no project-level npm setup is needed. If that fails, run
 `npm i @napi-rs/canvas` inside the skill folder. Without `install.sh`, the skill
 still works from wherever it was cloned — run `node render.mjs` from the clone.
 
-## When the user asks for a video
+## Run a request in two phases
 
-1. **Write the story first, in six chapters.** Hook → context → mechanism → the
-   cost → the turn → the answer. One sentence per shot, and that sentence is the
-   caption. Never write a paragraph and then cut it up.
-2. **Pick one template per shot** from the catalog in `reference.md`. If an idea
-   has no template, use the closest one; `card` with a big dot-matrix word is
-   always a legal fallback.
-3. **Write `storyboard.md` and show it before you write any JSON.** Start from
-   `examples/storyboard.template.md`. A table, one
-   row per shot: `# | chapter | template | caption lines | dur | the one idea`.
-   Captions come from the user's brief; if the brief is thin, say what you had to
-   invent and ask. Do not start coding until this table exists.
-4. **Translate the table into `film.json`** — same order, same captions. This step
-   is mechanical: the JSON is a transcription, not a place to invent content.
-5. **Validate**: `node check.mjs film.json`. It prints the storyboard back and
-   fails on a bad template, an absurd duration, or a film that is still the demo.
-   Fix what it flags before going further.
-6. **Render stills**: `node render.mjs film.json --stills --outdir stills`.
-   Look at them. Fix overlaps, over-long captions, dead frames. Never render the
-   whole video before the stills look right.
-7. **Render the video**: `node render.mjs film.json out/film.mp4 [--music bed.mp3]`.
-   About 24 rendered frames per second, so a 3-minute film takes ~4 minutes.
-8. **Check the mp4** with `ffprobe` plus a few extracted frames, then hand over
-   the path with the runtime and the shot count.
+A request can be one line — "make me a video about X". You own the rest: you
+infer the angle, the facts and the runtime, and you say what you assumed. Never
+answer with a question list before producing the plan; put assumptions in the
+plan and let the user correct them there.
 
-```bash
-# smoke test only — proves the install works. This is NOT a video for the user.
-cd .agents/skills/wireframe-explainer
-node render.mjs examples/containers.film.json --stills --outdir /tmp/we-check
+### Phase A — plan (stop for approval)
+
+1. **Script.** Six chapters (more for long films, see the scale table): hook →
+   context → mechanism → cost → turn → answer. One sentence per shot, and that
+   sentence *is* the caption. Write it in `storyboard.md`, not in your head.
+2. **Shots.** One template or one compose scene per shot. Pick from the catalog
+   in `reference.md`; if nothing fits, build the shot from primitives with
+   `tpl: "compose"` (see below). Never force an idea into the wrong template.
+3. **`storyboard.md`** — start from `examples/storyboard.template.md`. A table,
+   one row per shot: `# | chapter | template | caption lines | dur | the idea`.
+4. **`film.json`** — a mechanical transcription of that table. No new content.
+5. **`node render.mjs film.json --sheet --outdir stills`** — one labelled frame
+   per shot, as a single `stills/storyboard.png`.
+6. **Present and stop.** Show the table plus the sheet path, say what you
+   assumed, and ask for approval. Do not render video yet.
+
+Skip the wait only if the user said "just make it", "no need to check" or similar
+— then still write `storyboard.md` and the sheet, and mention both.
+
+### Phase B — build (after approval)
+
+7. `node check.mjs film.json` — prints the storyboard back and fails on a bad
+   template, an absurd duration, or a film that is still the demo whose captions
+   are lifted from `examples/containers.film.json`. Fix what it flags.
+8. `node render.mjs film.json --stills --outdir stills` — full-size frames at a
+   few timestamps. Look at them: overlaps, clipping, dead frames, long captions.
+9. Render:
+   - one part: `node render.mjs film.json out/film.mp4 [--music bed.mp3]`
+   - long film: `node build.mjs out/film.mp4 act1.json act2.json ...` or
+     `node build.mjs out/film.mp4 film.json --parts 8`
+10. `ffprobe` the result, extract two or three frames, then hand over the path
+    with the runtime, shot count and what is still a guess.
+
+Rendering runs at ~24 frames per second, so wall time ≈ 3× the film's length.
+
+## When no template fits: compose a scene
+
+`tpl: "compose"` takes an ordered list of primitives — array order is draw order,
+each element reveals on its own clock:
+
+```json
+{
+  "tpl": "compose", "dur": 3.2,
+  "props": { "elements": [
+    { "prim": "panel", "at": [360, 470], "w": 420, "h": 190 },
+    { "prim": "tiles", "at": [360, 470], "cols": 12, "rows": 3, "cell": 18, "t0": 0.1 },
+    { "prim": "arrow", "from": [150, 640], "to": [560, 640], "t0": 0.4 },
+    { "prim": "badge", "at": [150, 640], "text": "RAW", "size": 20 },
+    { "prim": "figure", "at": [260, 700], "h": 96, "t0": 0.3 },
+    { "prim": "counter", "at": [470, 720], "from": 0, "to": 7200, "t0": 0.5 },
+    { "prim": "callout", "at": [360, 350], "from": [420, 380], "text": "THE LINE NEVER STOPS" }
+  ] },
+  "lines": ["ONE LINE", "SEVEN THOUSAND"]
+}
 ```
 
-If a request produces the demo instead of the user's topic, the step that was
-skipped is step 3 (the storyboard). Go back to it.
+Primitives: `chip stack box rings figure label word text badge meter bars
+linechart dots tiles arrow callout counter panel lattice cross check`.
+`at` is the anchor in px on the 720×1280 canvas; `t0` is when it appears (local
+seconds); `reveal` is how long it takes (default 0.45). Full prop list in
+`reference.md`.
+
+Composing is how a 2-hour film stays in one style without 2500 hand-built
+templates: most shots reuse a template, the ones that do not get composed from
+the same primitives.
+
+## How big can it get
+
+| target | shots | how to build | note |
+|---|---|---|---|
+| 30 s | ~12 | one film.json | a hook and three beats |
+| 60 s | ~22 | one film.json | the default ask |
+| 3 min | ~65 | one film.json | the reference length |
+| 10 min | ~210 | 3-4 parts | `build.mjs --parts 3` |
+| 30 min | ~630 | 8-10 parts, chapters→acts | review part by part |
+| 2 h | ~2500 | one film.json per act, 20-40 parts | render overnight; ~3-5 h CPU, ~200-400 MB |
+
+Long-form rules: keep 20-22 shots/min (faster feels like noise over 2 hours),
+promote chapters to acts with their own `film.json` and their own HUD badge, and
+render/review one part at a time so a bad act never costs the whole render.
 
 ## film.json
 
@@ -89,7 +142,7 @@ skipped is step 3 (the storyboard). Go back to it.
   "shots": [
     {
       "ch": 0,                 // index into chapters (drives the top-left HUD)
-      "tpl": "compare",        // template name, see reference.md
+      "tpl": "compare",        // template name (or "compose"), see reference.md
       "dur": 3.2,              // 1.5-4.5 s (mean 2.7)
       "props": { },
       "lines": ["ONE SHIP", "TOOK SIX DAYS"],   // 1-3 caption lines
@@ -137,3 +190,7 @@ paints those words lime; `{"text": "...", "color": "lime"}` paints the whole lin
 - Do not ship without looking at the stills.
 - Do not answer a video request by rendering, re-labelling or lightly editing
   `examples/containers.film.json`. If the output could pass for the demo, it is wrong.
+- Do not jump to Phase B without a `storyboard.md` and a `--sheet` image. The
+  user approves pictures, not JSON.
+- Do not use a template that misrepresents the idea just because it exists —
+  compose the shot instead.

@@ -53,6 +53,35 @@ All props are optional; the defaults are the reference's most common setup.
 | `dots` | sparse field of dots, a few lit (headcount, survivors) | `lit:[i]`, `cols`, `rows`, `cell`, `fade` |
 | `card` | empty beat with a big dot-matrix word | `big`, `bigSize`, `frame` |
 
+### Composing a shot no template covers
+
+`tpl: "compose"` with `props.elements` — an ordered list, array order = draw
+order. Element props: `at:[x,y]` (anchor in px), `t0` (local seconds it appears),
+`reveal` (duration, default 0.45), plus the primitive's own props.
+
+| prim | draws | main props |
+|---|---|---|
+| `chip` | a chip die, optionally with pins and an inner die | `size, thick, color, inner, pins` |
+| `stack` | a tower of layers | `size, layers, gap, build` |
+| `box` | an upright iso box / cabinet | `size, height, color` |
+| `rings` | concentric iso rings | `n, r0, gap, color` |
+| `figure` | stick figure, feet at `at` | `h, walk, arms` |
+| `label` | dot-matrix label, top-left at `at` | `text, size, color` |
+| `word` | big dot-matrix word, centred | `text, size, glow` |
+| `text` | bold caption-font text | `text, size, color, bg, w` |
+| `badge` | boxed label | `text, size, w, h` |
+| `meter` | horizontal meter | `w, h, value, caption` |
+| `bars` | bar chart | `values[], labels[], colors[], bw, gap, maxH` |
+| `linechart` | line chart | `points[], w, h, color` |
+| `dots` | dot field with lit indices | `cols, rows, cell, lit[]` |
+| `tiles` | square tile grid | `cols, rows, cell, fill` |
+| `arrow` | connector with head | `from, to, dash, head` |
+| `callout` | leader line + label | `from, text, size` |
+| `counter` | ticking number | `from, to, prefix, suffix` |
+| `panel` | framed rectangle / screen | `w, h, fill` |
+| `lattice` | iso lattice of chips with links | `n, step, chip, links` |
+| `cross` / `check` | red X / lime tick | `size` |
+
 Shot-level extras: `annot` (dot-matrix line, top centre), `big` ({text,y,size}),
 `gridCell`, `gridAlpha`, `gridY`, `grid:false` to drop the ground grid,
 `enter:"hard"|"fade"|"pop"`, `fade:true`.
@@ -82,3 +111,5 @@ Each chapter changes the HUD badge (a year, or a count) and advances one tick.
 - Shot lengths stay between 1.5 and 4.5 s; nothing is a still for longer than
   the captions need.
 - The mp4 is 720×1280 at 30 fps and the duration matches the sum of `dur`.
+- For long films: parts render in order, each part is reviewable on its own, and
+  the HUD badge changes at act boundaries, not mid-part.
